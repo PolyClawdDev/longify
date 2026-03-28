@@ -908,6 +908,24 @@
     requestAnimationFrame(animateHero);
   }
   animateHero();
+    /* ─── COPY CA BUTTON ─── */
+  const copyCaBtn = document.getElementById('copy-ca-btn');
+  const CA_ADDRESS = "CUsZmSSHQB753nVGjtVbhDNeQ3dFxRc1cpdHkNpSpump";
+
+  copyCaBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(CA_ADDRESS).then(() => {
+      const originalText = copyCaBtn.textContent;
+      copyCaBtn.textContent = "✓ COPIED!";
+      copyCaBtn.style.background = "#86efac";   // green flash
+      
+      setTimeout(() => {
+        copyCaBtn.textContent = originalText;
+        copyCaBtn.style.background = "";         // reset to original style
+      }, 2200);
+    }).catch(() => {
+      alert("Failed to copy CA to clipboard");
+    });
+  });
 </script>
 </body>
 </html>
