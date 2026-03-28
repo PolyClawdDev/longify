@@ -840,7 +840,7 @@
 
     // Watermark
     if (wpos !== 'none' && wmark) {
-      const fontSize = Math.round(totalW / 8);
+      const fontSize = Math.round(totalW / 4);
       ctx.font = `900 ${fontSize}px Impact, Arial Black, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = wpos === 'top' ? 'top' : wpos === 'bottom' ? 'bottom' : 'middle';
