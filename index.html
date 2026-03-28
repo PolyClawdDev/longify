@@ -84,12 +84,22 @@
 
     .stripe {
       flex: 1;
-      background-size: cover;
-      background-position: center top;
-      background-repeat: no-repeat;
+      overflow: hidden;
+      position: relative;
       filter: saturate(1.15) brightness(.88);
       transform-origin: bottom center;
       transition: flex .4s cubic-bezier(.4,0,.2,1), filter .3s;
+    }
+
+    /* object-fit:fill = full horizontal squish — the real LONGIFY effect */
+    .stripe img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+      display: block;
+      pointer-events: none;
     }
 
     .stripes:hover .stripe { flex: 1; filter: saturate(.8) brightness(.6); }
@@ -98,14 +108,6 @@
       filter: saturate(1.4) brightness(1) !important;
       z-index: 2;
     }
-
-    .stripe:nth-child(1) { background-image: url('PUBLIC/Hl1bsg0D_400x400.jpg'); }
-    .stripe:nth-child(2) { background-image: url('PUBLIC/VBaJldQR_400x400.jpg'); }
-    .stripe:nth-child(3) { background-image: url('PUBLIC/WMH0-IGY_400x400.jpg'); }
-    .stripe:nth-child(4) { background-image: url('PUBLIC/XUJTdd67_400x400.jpg'); }
-    .stripe:nth-child(5) { background-image: url('PUBLIC/m7xCuBy0_400x400.jpg'); }
-    .stripe:nth-child(6) { background-image: url('PUBLIC/w4RmOCIl_400x400.jpg'); }
-    .stripe:nth-child(7) { background-image: url('PUBLIC/wJCaFLgE_400x400.jpg'); }
 
     /* overlay gradient at bottom */
     .hero-fade {
@@ -570,13 +572,13 @@
 <!-- HERO -->
 <div id="hero">
   <div class="stripes" id="heroStripes">
-    <div class="stripe"></div>
-    <div class="stripe"></div>
-    <div class="stripe"></div>
-    <div class="stripe"></div>
-    <div class="stripe"></div>
-    <div class="stripe"></div>
-    <div class="stripe"></div>
+    <div class="stripe"><img src="PUBLIC/Hl1bsg0D_400x400.jpg" alt="" /></div>
+    <div class="stripe"><img src="PUBLIC/VBaJldQR_400x400.jpg" alt="" /></div>
+    <div class="stripe"><img src="PUBLIC/WMH0-IGY_400x400.jpg" alt="" /></div>
+    <div class="stripe"><img src="PUBLIC/XUJTdd67_400x400.jpg" alt="" /></div>
+    <div class="stripe"><img src="PUBLIC/m7xCuBy0_400x400.jpg" alt="" /></div>
+    <div class="stripe"><img src="PUBLIC/w4RmOCIl_400x400.jpg" alt="" /></div>
+    <div class="stripe"><img src="PUBLIC/wJCaFLgE_400x400.jpg" alt="" /></div>
   </div>
   <div class="hero-fade"></div>
 
@@ -781,14 +783,14 @@
   ];
 
   function updateHeroWithUploads() {
-    const stripes = document.querySelectorAll('#heroStripes .stripe');
+    const imgs = document.querySelectorAll('#heroStripes .stripe img');
     if (imageFiles.length === 0) {
-      stripes.forEach((stripe, i) => { stripe.style.backgroundImage = `url(${PUBLIC_IMAGES[i]})`; });
+      imgs.forEach((img, i) => { img.src = PUBLIC_IMAGES[i]; });
       return;
     }
-    stripes.forEach((stripe, i) => {
+    imgs.forEach((img, i) => {
       const entry = imageFiles[i % imageFiles.length];
-      if (entry) stripe.style.backgroundImage = `url(${entry.url})`;
+      if (entry) img.src = entry.url;
     });
   }
 
