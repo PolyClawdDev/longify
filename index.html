@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LONGIFY</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Impact&family=Inter:wght@400;600;700;900&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --stripe-w: 14.28%;
+      --accent: #fff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ───────── NAV ───────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 36px;
+      background: linear-gradient(to bottom, rgba(0,0,0,.85) 0%, transparent 100%);
+    }
+
+    .logo {
+      font-family: 'Impact', 'Arial Black', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      letter-spacing: 2px;
+      color: #fff;
+      text-shadow:
+        3px 3px 0 #000,
+       -3px -3px 0 #000,
+        3px -3px 0 #000,
+       -3px  3px 0 #000,
+        0 4px 18px rgba(0,0,0,.6);
+      user-select: none;
+      text-decoration: none;
+    }
+
+    .nav-cta {
+      background: #fff;
+      color: #000;
+      font-weight: 700;
+      font-size: .95rem;
+      padding: 10px 24px;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: background .2s, color .2s, transform .15s;
+    }
+    .nav-cta:hover { background: #e0e0e0; transform: scale(1.04); }
+
+    /* ───────── HERO ───────── */
+    #hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 560px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* stripe container fills hero */
+    .stripes {
+      position: absolute;
+      inset: 0;
+      display: flex;
+    }
+
+    .stripe {
+      flex: 1;
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
+      filter: saturate(1.15) brightness(.88);
+      transform-origin: bottom center;
+      transition: flex .4s cubic-bezier(.4,0,.2,1), filter .3s;
+    }
+
+    .stripes:hover .stripe { flex: 1; filter: saturate(.8) brightness(.6); }
+    .stripe:hover {
+      flex: 2.5 !important;
+      filter: saturate(1.4) brightness(1) !important;
+      z-index: 2;
+    }
+
+    .stripe:nth-child(1) { background-image: url('PUBLIC/Hl1bsg0D_400x400.jpg'); }
+    .stripe:nth-child(2) { background-image: url('PUBLIC/VBaJldQR_400x400.jpg'); }
+    .stripe:nth-child(3) { background-image: url('PUBLIC/WMH0-IGY_400x400.jpg'); }
+    .stripe:nth-child(4) { background-image: url('PUBLIC/XUJTdd67_400x400.jpg'); }
+    .stripe:nth-child(5) { background-image: url('PUBLIC/m7xCuBy0_400x400.jpg'); }
+    .stripe:nth-child(6) { background-image: url('PUBLIC/w4RmOCIl_400x400.jpg'); }
+    .stripe:nth-child(7) { background-image: url('PUBLIC/wJCaFLgE_400x400.jpg'); }
+
+    /* overlay gradient at bottom */
+    .hero-fade {
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 55%;
+      background: linear-gradient(to bottom, transparent 0%, #000 100%);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    /* hero text */
+    .hero-content {
+      position: relative;
+      z-index: 4;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .hero-title {
+      font-family: 'Impact', 'Arial Black', sans-serif;
+      font-size: clamp(5rem, 14vw, 13rem);
+      letter-spacing: 6px;
+      line-height: 1;
+      color: #fff;
+      text-shadow:
+        4px 4px 0 #000,
+       -4px -4px 0 #000,
+        4px -4px 0 #000,
+       -4px  4px 0 #000,
+        0 0 60px rgba(0,0,0,.8);
+    }
+
+    .hero-sub {
+      margin-top: 16px;
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.75);
+      text-shadow: 0 2px 10px #000;
+    }
+
+    .hero-arrow {
+      margin-top: 40px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      opacity: .8;
+      animation: bounce 2s infinite;
+      text-decoration: none;
+      color: #fff;
+      font-size: .85rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .hero-arrow svg { display: block; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+
+    /* ───────── SECTION WRAPPER ───────── */
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 28px;
+    }
+
+    .section-tag {
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.45);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Impact', 'Arial Black', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      letter-spacing: 2px;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .section-desc {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,.65);
+      max-width: 620px;
+    }
+
+    /* ───────── GENERATOR ───────── */
+    #generator { border-top: 1px solid rgba(255,255,255,.08); }
+
+    .gen-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    @media (max-width: 700px) { .gen-grid { grid-template-columns: 1fr; } }
+
+    /* drop zone */
+    .drop-zone {
+      border: 2px dashed rgba(255,255,255,.25);
+      border-radius: 16px;
+      background: rgba(255,255,255,.04);
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .drop-zone.dragover,
+    .drop-zone:hover {
+      border-color: rgba(255,255,255,.6);
+      background: rgba(255,255,255,.08);
+    }
+
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .drop-icon {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.1);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .drop-zone p { font-size: .95rem; color: rgba(255,255,255,.55); text-align: center; }
+    .drop-zone strong { color: #fff; }
+
+    .drop-zone .paste-hint {
+      font-size: .78rem;
+      color: rgba(255,255,255,.3);
+      margin-top: 4px;
+    }
+
+    /* thumbnail previews */
+    .thumb-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .thumb-wrap {
+      position: relative;
+      width: 70px; height: 70px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,.15);
+    }
+
+    .thumb-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    .thumb-wrap .remove-btn {
+      position: absolute;
+      top: 2px; right: 2px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: rgba(0,0,0,.7);
+      border: none;
+      color: #fff;
+      font-size: 10px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      line-height: 1;
+    }
+
+    /* controls panel */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .ctrl-group label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.5);
+      margin-bottom: 8px;
+    }
+
+    .ctrl-group input[type="range"] {
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 4px;
+      background: rgba(255,255,255,.2);
+      border-radius: 99px;
+      outline: none;
+    }
+
+    .ctrl-group input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .ctrl-group .range-val {
+      font-size: .85rem;
+      color: rgba(255,255,255,.6);
+      margin-top: 4px;
+    }
+
+    .ctrl-group select, .ctrl-group input[type="text"] {
+      width: 100%;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 10px;
+      color: #fff;
+      font-family: inherit;
+      font-size: .92rem;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .ctrl-group select:focus, .ctrl-group input[type="text"]:focus {
+      border-color: rgba(255,255,255,.5);
+    }
+
+    .ctrl-group select option { background: #111; }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: .9rem;
+      color: rgba(255,255,255,.7);
+      cursor: pointer;
+    }
+
+    .toggle {
+      position: relative;
+      width: 44px; height: 24px;
+      flex-shrink: 0;
+    }
+
+    .toggle input { opacity: 0; width: 0; height: 0; }
+
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,.15);
+      border-radius: 99px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      left: 3px; top: 3px;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform .2s;
+    }
+
+    .toggle input:checked + .toggle-slider { background: #5ec9f5; }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+    /* generate button */
+    .btn-generate {
+      width: 100%;
+      padding: 16px;
+      background: #fff;
+      color: #000;
+      font-family: 'Impact', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 3px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform .15s, background .2s;
+    }
+
+    .btn-generate:hover { background: #e8e8e8; transform: scale(1.02); }
+    .btn-generate:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+
+    /* ───────── OUTPUT ───────── */
+    #output-section {
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+
+    .output-canvas-wrap {
+      margin-top: 40px;
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.1);
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+    }
+
+    #outputCanvas {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: 14px;
+    }
+
+    .output-placeholder {
+      color: rgba(255,255,255,.25);
+      font-size: .95rem;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+      padding: 14px 32px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.25);
+      color: #fff;
+      font-weight: 700;
+      font-size: .95rem;
+      border-radius: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .2s, transform .15s;
+    }
+    .btn-download:hover { background: rgba(255,255,255,.18); transform: scale(1.03); }
+    .btn-download.hidden { display: none; }
+
+    /* ───────── HOW IT WORKS ───────── */
+    #how { border-top: 1px solid rgba(255,255,255,.08); }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .step {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+      padding: 28px 22px;
+    }
+
+    .step-num {
+      font-family: 'Impact', sans-serif;
+      font-size: 3rem;
+      color: rgba(255,255,255,.12);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .step h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      font-size: .88rem;
+      color: rgba(255,255,255,.5);
+      line-height: 1.6;
+    }
+
+    /* ───────── FOOTER ───────── */
+    footer {
+      border-top: 1px solid rgba(255,255,255,.08);
+      text-align: center;
+      padding: 40px 20px;
+      font-size: .82rem;
+      color: rgba(255,255,255,.25);
+    }
+
+    footer span {
+      font-family: 'Impact', sans-serif;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,.5);
+    }
+
+    /* ───────── LOADER ───────── */
+    #loader {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.7);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    #loader.active { display: flex; }
+
+    .spinner {
+      width: 48px; height: 48px;
+      border: 4px solid rgba(255,255,255,.15);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #loader p {
+      font-family: 'Impact', sans-serif;
+      letter-spacing: 3px;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="spinner"></div>
+  <p>LONGIFYING…</p>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">$LONGIFY</a>
+  <a class="nav-cta" href="#" id="buyBtn">BUY $LONGIFY</a>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="stripes" id="heroStripes">
+    <div class="stripe"></div>
+    <div class="stripe"></div>
+    <div class="stripe"></div>
+    <div class="stripe"></div>
+    <div class="stripe"></div>
+    <div class="stripe"></div>
+    <div class="stripe"></div>
+  </div>
+  <div class="hero-fade"></div>
+
+  <div class="hero-content">
+    <h1 class="hero-title">LONGIFY</h1>
+    <p class="hero-sub">Compress any image into a stripe</p>
+    <a class="hero-arrow" href="#generator">
+      TRY IT
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M12 5v14M5 12l7 7 7-7" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+</div>
+
+<!-- GENERATOR -->
+<section id="generator">
+  <p class="section-tag">Image Generator</p>
+  <h2 class="section-title">LONGIFY YOUR IMAGE</h2>
+  <p class="section-desc">Upload, drag & drop, or paste images below. They'll be squished into vertical stripes — just like the banner above. Stack as many as you want.</p>
+
+  <div class="gen-grid">
+    <!-- left: drop zone + thumbs -->
+    <div>
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" accept="image/*" multiple />
+        <div class="drop-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M12 16V8M8 12l4-4 4 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="3" y="3" width="18" height="18" rx="4" stroke="#fff" stroke-width="1.5" opacity=".4"/>
+          </svg>
+        </div>
+        <p><strong>Drop images here</strong><br/>or click to browse</p>
+        <p class="paste-hint">You can also press Ctrl/Cmd + V to paste</p>
+      </div>
+      <div class="thumb-row" id="thumbRow"></div>
+    </div>
+
+    <!-- right: controls -->
+    <div class="controls">
+
+      <label class="toggle-row">
+        <span class="toggle">
+          <input type="checkbox" id="toggleSaturation" checked />
+          <span class="toggle-slider"></span>
+        </span>
+        Boost colours
+      </label>
+
+      <label class="toggle-row">
+        <span class="toggle">
+          <input type="checkbox" id="toggleGap" />
+          <span class="toggle-slider"></span>
+        </span>
+        Add gap between stripes
+      </label>
+
+      <button class="btn-generate" id="btnGenerate" disabled>GENERATE</button>
+    </div>
+  </div>
+</section>
+
+<!-- OUTPUT -->
+<section id="output-section">
+  <p class="section-tag">Result</p>
+  <h2 class="section-title">YOUR LONGIFY IMAGE</h2>
+
+  <div class="output-canvas-wrap" id="outputWrap">
+    <p class="output-placeholder" id="outputPlaceholder">Your image will appear here once generated.</p>
+    <canvas id="outputCanvas" style="display:none;"></canvas>
+  </div>
+
+  <a class="btn-download hidden" id="btnDownload" download="longify.png">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M12 3v13M6 11l6 6 6-6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M4 20h16" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+    </svg>
+    Download PNG
+  </a>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <p class="section-tag">How It Works</p>
+  <h2 class="section-title">THREE STEPS</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>Upload Your Images</h3>
+      <p>Drop in any pictures — memes, selfies, characters, anything. The more the better.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>Adjust the Stripes</h3>
+      <p>Control stripe width, output height, colour boost and spacing until it looks just right.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>Download & Share</h3>
+      <p>Hit Generate, then download your Longify image as a PNG and post it everywhere.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>LONGIFY</span> &nbsp;·&nbsp; Compress the world, one stripe at a time.
+</footer>
+
+<script>
+  /* ─── State ─── */
+  const imageFiles = [];   // {file, url, img} objects
+
+  const fileInput      = document.getElementById('fileInput');
+  const dropZone       = document.getElementById('dropZone');
+  const thumbRow       = document.getElementById('thumbRow');
+  const btnGenerate    = document.getElementById('btnGenerate');
+  const btnDownload    = document.getElementById('btnDownload');
+  const outputCanvas   = document.getElementById('outputCanvas');
+  const outputWrap     = document.getElementById('outputWrap');
+  const outputPlaceholder = document.getElementById('outputPlaceholder');
+  const loader         = document.getElementById('loader');
+
+  const STRIPE_W    = 160;
+  const OUT_H       = 600;
+  const WMARK_TEXT  = '$LONGIFY';
+  const WMARK_POS   = 'center';
+  const toggleSat   = document.getElementById('toggleSaturation');
+  const toggleGap   = document.getElementById('toggleGap');
+
+  /* ─── File input ─── */
+  fileInput.addEventListener('change', e => addFiles(e.target.files));
+
+  /* ─── Drag & drop ─── */
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    addFiles(e.dataTransfer.files);
+  });
+
+  /* ─── Paste ─── */
+  document.addEventListener('paste', e => {
+    const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+    const imgs = [...items].filter(i => i.kind === 'file' && i.type.startsWith('image/'));
+    if (imgs.length) addFiles(imgs.map(i => i.getAsFile()));
+  });
+
+  /* ─── Add files ─── */
+  function addFiles(files) {
+    [...files].forEach(file => {
+      if (!file || !file.type.startsWith('image/')) return;
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.src = url;
+      const entry = { file, url, img };
+      imageFiles.push(entry);
+      img.onload = () => renderThumbs();
+    });
+    setTimeout(updateGenerateBtn, 100);
+  }
+
+  function renderThumbs() {
+    thumbRow.innerHTML = '';
+    imageFiles.forEach((entry, idx) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'thumb-wrap';
+      const im = document.createElement('img');
+      im.src = entry.url;
+      const btn = document.createElement('button');
+      btn.className = 'remove-btn';
+      btn.textContent = '×';
+      btn.addEventListener('click', e => { e.stopPropagation(); removeImage(idx); });
+      wrap.appendChild(im);
+      wrap.appendChild(btn);
+      thumbRow.appendChild(wrap);
+    });
+    updateGenerateBtn();
+    updateHeroWithUploads();
+  }
+
+  function removeImage(idx) {
+    URL.revokeObjectURL(imageFiles[idx].url);
+    imageFiles.splice(idx, 1);
+    renderThumbs();
+  }
+
+  function updateGenerateBtn() {
+    btnGenerate.disabled = imageFiles.length === 0;
+  }
+
+  /* ─── Inject uploaded images into hero stripes (only when user adds images) ─── */
+  const PUBLIC_IMAGES = [
+    'PUBLIC/Hl1bsg0D_400x400.jpg',
+    'PUBLIC/VBaJldQR_400x400.jpg',
+    'PUBLIC/WMH0-IGY_400x400.jpg',
+    'PUBLIC/XUJTdd67_400x400.jpg',
+    'PUBLIC/m7xCuBy0_400x400.jpg',
+    'PUBLIC/w4RmOCIl_400x400.jpg',
+    'PUBLIC/wJCaFLgE_400x400.jpg',
+  ];
+
+  function updateHeroWithUploads() {
+    const stripes = document.querySelectorAll('#heroStripes .stripe');
+    if (imageFiles.length === 0) {
+      stripes.forEach((stripe, i) => { stripe.style.backgroundImage = `url(${PUBLIC_IMAGES[i]})`; });
+      return;
+    }
+    stripes.forEach((stripe, i) => {
+      const entry = imageFiles[i % imageFiles.length];
+      if (entry) stripe.style.backgroundImage = `url(${entry.url})`;
+    });
+  }
+
+  /* ─── Generate ─── */
+  btnGenerate.addEventListener('click', generateLongify);
+
+  async function generateLongify() {
+    if (imageFiles.length === 0) return;
+
+    loader.classList.add('active');
+
+    // ensure all images loaded
+    await Promise.all(imageFiles.map(e => new Promise(res => {
+      if (e.img.complete) return res();
+      e.img.onload = res;
+    })));
+
+    const stripeW   = STRIPE_W;
+    const outH      = OUT_H;
+    const gap       = toggleGap.checked ? 4 : 0;
+    const boosted   = toggleSat.checked;
+    const wmark     = WMARK_TEXT;
+    const wpos      = WMARK_POS;
+
+    const count  = imageFiles.length;
+    const totalW = count * stripeW + (count - 1) * gap;
+
+    outputCanvas.width  = totalW;
+    outputCanvas.height = outH;
+
+    const ctx = outputCanvas.getContext('2d');
+
+    // black bg
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, totalW, outH);
+
+    if (boosted) {
+      ctx.filter = 'saturate(1.4) brightness(0.95)';
+    }
+
+    imageFiles.forEach((entry, i) => {
+      const x = i * (stripeW + gap);
+      const img = entry.img;
+      // draw image squeezed into stripe width
+      const srcAspect = img.naturalWidth / img.naturalHeight;
+      const dstAspect = stripeW / outH;
+      // always fill the stripe fully (cover)
+      let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
+      if (srcAspect > dstAspect) {
+        // image wider than stripe ratio — crop sides
+        sw = Math.round(img.naturalHeight * dstAspect);
+        sx = Math.round((img.naturalWidth - sw) / 2);
+      } else {
+        // image taller — crop top/bottom to focus top
+        sh = Math.round(img.naturalWidth / dstAspect);
+        sy = 0;
+      }
+      ctx.drawImage(img, sx, sy, sw, sh, x, 0, stripeW, outH);
+    });
+
+    ctx.filter = 'none';
+
+    // Watermark
+    if (wpos !== 'none' && wmark) {
+      const fontSize = Math.round(totalW / 8);
+      ctx.font = `900 ${fontSize}px Impact, Arial Black, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = wpos === 'top' ? 'top' : wpos === 'bottom' ? 'bottom' : 'middle';
+
+      const tx = totalW / 2;
+      const ty = wpos === 'top' ? fontSize * 0.6
+               : wpos === 'bottom' ? outH - fontSize * 0.3
+               : outH / 2;
+
+      // stroke
+      ctx.lineWidth = fontSize / 7;
+      ctx.strokeStyle = '#000';
+      ctx.lineJoin = 'round';
+      ctx.strokeText(wmark, tx, ty);
+      // fill
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(wmark, tx, ty);
+    }
+
+    outputCanvas.style.display = 'block';
+    outputPlaceholder.style.display = 'none';
+    btnDownload.classList.remove('hidden');
+    btnDownload.href = outputCanvas.toDataURL('image/png');
+
+    loader.classList.remove('active');
+    document.getElementById('output-section').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  /* ─── Download ─── */
+  btnDownload.addEventListener('click', () => {
+    btnDownload.href = outputCanvas.toDataURL('image/png');
+  });
+
+  // Init hero with PUBLIC images on load
+  updateHeroWithUploads();
+
+  // Subtle vertical float animation for hero stripes
+  const heroStripeEls = document.querySelectorAll('#heroStripes .stripe');
+  let tick = 0;
+  function animateHero() {
+    heroStripeEls.forEach((el, i) => {
+      const offset = Math.sin(tick / 80 + i * 0.9) * 8;
+      el.style.transform = `translateY(${offset}px)`;
+    });
+    tick++;
+    requestAnimationFrame(animateHero);
+  }
+  animateHero();
+</script>
+</body>
+</html>
